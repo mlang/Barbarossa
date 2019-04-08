@@ -35,7 +35,7 @@ type DbArray = UArray Int BBoard
 data Piece = Pawn | Knight | Bishop | Rook | Queen | King
     deriving (Eq, Ord, Enum, Ix, Show)
 
-data Color = White | Black deriving (Eq, Show)
+data Color = White | Black deriving (Eq, Ix, Ord, Show)
 
 data TabCont = Empty
              | Busy !Color !Piece

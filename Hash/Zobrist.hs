@@ -9,6 +9,7 @@ module Hash.Zobrist (
 ) where
 
 import Data.Array.Base
+import Data.Ix
 import GHC.Arr (unsafeIndex)
 import System.Random
 -- import Control.Exception (assert)
@@ -30,16 +31,8 @@ zobMove = fromIntegral $ zobrist `unsafeAt` (12*64)
 -- field: one index in zobrist (0 to 12*64-1)
 {-# INLINE zobPiece #-}
 zobPiece :: Color -> Piece -> Square -> ZKey
-zobPiece White p sq = zobrist `unsafeAt` idx
-    where !idx = (p2intw `unsafeAt` unsafeIndex (Pawn, King) p) + sq
-zobPiece Black p sq = zobrist `unsafeAt` idx
-    where !idx = (p2intb `unsafeAt` unsafeIndex (Pawn, King) p) + sq
-
-p2intw, p2intb :: UArray Piece Int
-p2intw = array (Pawn, King) $ zip [Pawn .. King] [0, 64 .. ]
-p2intb = array (Pawn, King) $ zip [Pawn .. King] [b0, b1 .. ]
-    where b0 = p2intw!King + 64
-          b1 = b0 + 64
+zobPiece c p sq =
+  zobrist `unsafeAt` index ((White,Pawn,0),(Black,King,63)) (c, p, sq)
 
 zobCastBegin :: Int
 zobCastBegin = 12*64+1
